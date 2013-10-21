@@ -1,0 +1,9 @@
+*.pyc
+*.log
+build/
+dist/
+*.egg-info
+.DS_Store
+coverage.xml
+nosetests.xml
+example.db
