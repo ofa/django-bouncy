@@ -8,6 +8,8 @@ from OpenSSL import crypto
 from django.conf import settings
 from django.core.cache import get_cache
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.utils import timezone
+import dateutil.parser
 
 
 NOTIFICATION_HASH_FORMAT = '''Message
@@ -103,3 +105,14 @@ def approve_subscription(data):
 
     # Return a 200 Status Code
     return HttpResponse(unicode(result))
+
+
+def clean_time(time_string):
+    """Return a datetime from the Amazon-provided datetime string"""
+    # Get a timezone-aware datetime object from the string
+    time = dateutil.parser.parse(time_string)
+    if not settings.USE_TZ:
+        # If timezone support is not active, convert the time to UTC and remove
+        # the timezone field
+        time = time.astimezone(timezone.utc).replace(tzinfo=None)
+    return time

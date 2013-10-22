@@ -14,6 +14,7 @@ setup(
     install_requires=[
         'Django>=1.5',
         'South>=0.8.1',
+        'python-dateutil>=2.1',
         'pyopenssl>=0.13.1'
     ],
     keywords = "aws ses sns seacucumber boto",

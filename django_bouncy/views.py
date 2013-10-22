@@ -8,7 +8,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.conf import settings
 
-from django_bouncy.utils import verify_notification, approve_subscription
+from django_bouncy.utils import (
+    verify_notification, approve_subscription, clean_time
+)
+from django_bouncy.models import Bounce, Complaint
 
 VITAL_NOTIFICATION_FIELDS = [
     'Type', 'Message', 'Timestamp', 'Signature',
@@ -87,10 +90,10 @@ def endpoint(request):
         # so that Amazon doesn't attempt to deliver the message again
         return HttpResponse('Message is not valid JSON')
 
-    return process_message(message)
+    return process_message(message, data)
 
 
-def process_message(message):
+def process_message(message, notification):
     """
     Function to process a JSON message delivered from Amazon
     """
@@ -102,18 +105,69 @@ def process_message(message):
         return HttpResponse('Missing Vital Fields')
 
     if message['notificationType'] == 'Complaint':
-        return process_complaint(message)
+        return process_complaint(message, notification)
     if message['notificationType'] == 'Bounce':
-        return process_bounce(message)
+        return process_bounce(message, notification)
     else:
         return HttpResponse('Unknown Notification Type')
 
 
-def process_bounce(message):
+def process_bounce(message, notification):
     """Function to process a bounce notification"""
-    return HttpResponse('Bounce Response!')
+    mail = message['mail']
+    bounce = message['bounce']
+
+    bounces = []
+    for recipient in bounce['bouncedRecipients']:
+        bounces += [Bounce(
+            sns_topic=notification['TopicArn'],
+            sns_messageid=notification['MessageId'],
+            mail_timestamp=clean_time(mail['timestamp']),
+            mail_id=mail['messageId'],
+            mail_from=mail['source'],
+            address=recipient['emailAddress'],
+            feedback_id=bounce['feedbackId'],
+            feedback_timestamp=clean_time(bounce['timestamp']),
+            hard=bool(bounce['bounceType'] == 'Permanent'),
+            bounce_type=bounce['bounceType'],
+            bounce_subtype=bounce['bounceSubType'],
+            reporting_mta=bounce.get('reportingMTA'),
+            action=recipient.get('action'),
+            status=recipient.get('status'),
+            diagnostic_code=recipient.get('diagnosticCode')
+        )]
+
+    Bounce.objects.bulk_create(bounces)
+
+    return HttpResponse('Bounce Processed')
 
 
-def process_complaint(message):
+def process_complaint(message, notification):
     """Function to process a complaint notification"""
-    return HttpResponse('Complaint Response')
+    mail = message['mail']
+    complaint = message['complaint']
+
+    if complaint.has_key('arrivalDate'):
+        arrival_date = clean_time(complaint['arrivalDate'])
+    else:
+        arrival_date = None
+
+    complaints = []
+    for recipient in complaint['complainedRecipients']:
+        complaints += [Complaint(
+            sns_topic=notification['TopicArn'],
+            sns_messageid=notification['MessageId'],
+            mail_timestamp=clean_time(mail['timestamp']),
+            mail_id=mail['messageId'],
+            mail_from=mail['source'],
+            address=recipient['emailAddress'],
+            feedback_id=complaint['feedbackId'],
+            feedback_timestamp=clean_time(complaint['timestamp']),
+            useragent=complaint.get('userAgent'),
+            feedback_type=complaint.get('complaintFeedbackType'),
+            arrival_date=arrival_date
+        )]
+
+    Complaint.objects.bulk_create(complaints)
+
+    return HttpResponse('Complaint Processed')
