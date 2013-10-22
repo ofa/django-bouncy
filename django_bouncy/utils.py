@@ -91,7 +91,7 @@ def approve_subscription(data):
     pattern = getattr(
         settings,
         'BOUNCY_SUBSCRIBE_DOMAIN_REGEX',
-        "sns.[a-z0-9\-]+.amazonaws.com$"
+        r"sns.[a-z0-9\-]+.amazonaws.com$"
     )
     if not re.search(pattern, domain):
         return HttpResponseBadRequest('Improper Subscription Domain')

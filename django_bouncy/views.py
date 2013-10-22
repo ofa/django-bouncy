@@ -62,7 +62,8 @@ def endpoint(request):
     # regex to be overridden in settings
     domain = urllib.urlparse(data['SigningCertURL']).netloc
     pattern = getattr(
-        settings, 'BOUNCY_CERT_DOMAIN_REGEX', "sns.[a-z0-9\-]+.amazonaws.com$")
+        settings, 'BOUNCY_CERT_DOMAIN_REGEX', r"sns.[a-z0-9\-]+.amazonaws.com$"
+    )
     if not re.search(pattern, domain):
         return HttpResponseBadRequest('Improper Certifificate Location')
 
