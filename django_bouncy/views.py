@@ -55,9 +55,9 @@ def endpoint(request):
     if not set(VITAL_NOTIFICATION_FIELDS) <= set(data):
         return HttpResponseBadRequest('Request Missing Necessary Keys')
 
-    # Ensure that the type of message is one we'll accept
+    # Ensure that the type of notification is one we'll accept
     if not data['Type'] in ALLOWED_TYPES:
-        return HttpResponseBadRequest('Unknown Message Type')
+        return HttpResponseBadRequest('Unknown Notification Type')
 
     # Confirm that the signing certificate is hosted on a correct domain
     # AWS by default uses sns.{region}.amazonaws.com
@@ -68,7 +68,7 @@ def endpoint(request):
         settings, 'BOUNCY_CERT_DOMAIN_REGEX', r"sns.[a-z0-9\-]+.amazonaws.com$"
     )
     if not re.search(pattern, domain):
-        return HttpResponseBadRequest('Improper Certifificate Location')
+        return HttpResponseBadRequest('Improper Certificate Location')
 
     # Verify that the notification is signed by Amazon
     if (getattr(settings, 'BOUNCY_VERIFY_CERTIFICATE', True) 

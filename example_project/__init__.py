@@ -30,7 +30,7 @@ INSTALLED_APPS = (
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = [
-    '--with-xcoverage',
     '--with-xunit',
-    '--cover-package=blog,blogseo,blogofa,blogsocial',
+    '--nologcapture',
+    '--cover-package=django_bouncy',
 ]
