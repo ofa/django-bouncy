@@ -3,6 +3,7 @@ import urllib2
 import urllib
 import base64
 import re
+import pem
 
 from OpenSSL import crypto
 from django.conf import settings
@@ -54,6 +55,11 @@ def grab_keyfile(cert_url):
     if not pemfile:
         response = urllib2.urlopen(cert_url)
         pemfile = response.read()
+        # Extract the first certificate in the file and confirm it's a valid PEM
+        # certificate
+        certificate = pem.parse(pemfile)[0]
+        if not type(certificate) == pem.Certificate:
+            raise Exception('Bad Certificate')
         key_cache.set(cert_url, pemfile)
     return pemfile
 
