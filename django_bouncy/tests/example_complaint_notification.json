@@ -1,0 +1,11 @@
+{
+  "Type" : "Notification",
+  "MessageId" : "217eaf35-67ae-5230-874a-e5df4c5c71c0",
+  "TopicArn" : "arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes",
+  "Message" : "{\"notificationType\":\"Complaint\",\"complaint\":{\"userAgent\":\"Comcast Feedback Loop (V0.01)\",\"complainedRecipients\":[{\"emailAddress\":\"recipient1@example.com\"}],\"complaintFeedbackType\":\"abuse\",\"arrivalDate\":\"2009-12-03T04:24:21.000-05:00\",\"timestamp\":\"2012-05-25T14:59:38.623-07:00\",\"feedbackId\":\"000001378603177f-18c07c78-fa81-4a58-9dd1-fedc3cb8f49a-000000\"},\"mail\":{\"timestamp\":\"2012-05-25T14:59:38.623-07:00\",\"messageId\":\"000001378603177f-7a5433e7-8edb-42ae-af10-f0181f34d6ee-000000\",\"source\":\"email_1337983178623@amazon.com\",\"destination\":[\"recipient1@example.com\",\"recipient2@example.com\",\"recipient3@example.com\",\"recipient4@example.com\"]}}",
+  "Timestamp" : "2013-10-29T21:33:38.269Z",
+  "SignatureVersion" : "1",
+  "Signature" : "WSOJ4rMXBgsV8zGNMB0PfFY088tlONC+G9+9iv3MBMSv/8ll+kp/9e3xHgMR9ULuOKdl1kW/GRq5BTxaR3l2lf4ldJr2D/oD3H+20r1GgFDxmd1Xz/dMx4HqNEJlE6PKWCl8O9pwhh/c/vmVU8ss+JUGa2WbpY/rsPY7mHfZ40ScyQL4zfXgyWSyFeLe1Z0LyLDwQpKOJTqPEa+tS0/IaCaOudf2PF82ik/GJ8FTAfVmXOq8tNowVnNtfbz24sXQIWvEYtFRzJoM2pgRhBtRO2W8aMeawD5nqPl3Igp3WUlXQJjvRZS24l2qrBReASfSw4Hzak8ZxDcdKBcMcejiUA==",
+  "SigningCertURL" : "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-e372f8ca30337fdb084e8ac449342c77.pem",
+  "UnsubscribeURL" : "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes:3b3e6f79-bc99-4519-8f4d-3b9b70856ab8"
+}

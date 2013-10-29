@@ -1,0 +1,32 @@
+{
+   "notificationType":"Bounce",
+   "bounce":{
+      "bounceType":"Permanent",
+      "bounceSubType":"General",
+      "bouncedRecipients":[
+         {
+            "status":"5.0.0",
+            "action":"failed",
+            "diagnosticCode":"smtp; 550 user unknown",
+            "emailAddress":"recipient1@example.com"
+         },
+         {
+            "status":"4.0.0",
+            "action":"delayed",
+            "emailAddress":"recipient2@example.com"
+         }
+      ],
+      "reportingMTA":"example.com",
+      "timestamp":"2012-05-25T14:59:38.605-07:00",
+      "feedbackId":"000001378603176d-5a4b5ad9-6f30-4198-a8c3-b1eb0c270a1d-000000"
+   },
+   "mail":{
+      "timestamp":"2012-06-19T01:05:45.000Z",
+      "source":"sender@example.com",
+      "messageId":"00000138111222aa-33322211-cccc-cccc-cccc-ddddaaaa0680-000000",
+      "destination":[
+         "recipient1@example.com",
+         "recipient2@example.com"
+      ]
+   }
+}
