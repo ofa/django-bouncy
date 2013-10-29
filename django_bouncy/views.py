@@ -3,7 +3,7 @@ import json
 import urllib
 import re
 
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.conf import settings
@@ -71,11 +71,15 @@ def endpoint(request):
         return HttpResponseBadRequest('Improper Certifificate Location')
 
     # Verify that the notification is signed by Amazon
-    if not verify_notification(data):
+    if (getattr(settings, 'BOUNCY_VERIFY_CERTIFICATE', True) 
+        and not verify_notification(data)):
         return HttpResponseBadRequest('Improper Signature')
 
     # Handle subscription-based messages.
     if data['Type'] == 'SubscriptionConfirmation':
+        # Allow the disabling of the auto-subscription feature
+        if not getattr(settings, 'BOUNCY_AUTO_SUBSCRIBE', True):
+            raise Http404
         return approve_subscription(data)
     elif data['Type'] == 'UnsubscribeConfirmation':
         # We won't handle unsubscribe requests here. Return a 200 status code
