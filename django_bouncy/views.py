@@ -31,6 +31,8 @@ ALLOWED_TYPES = [
 @require_POST
 def endpoint(request):
     """Default view endpoint"""
+    # pylint: disable=too-many-return-statements
+
     # If necessary, check that the topic is correct
     if hasattr(settings, 'BOUNCY_TOPIC_ARN'):
         # Confirm that the proper topic header was sent
@@ -71,7 +73,7 @@ def endpoint(request):
         return HttpResponseBadRequest('Improper Certificate Location')
 
     # Verify that the notification is signed by Amazon
-    if (getattr(settings, 'BOUNCY_VERIFY_CERTIFICATE', True) 
+    if (getattr(settings, 'BOUNCY_VERIFY_CERTIFICATE', True)
         and not verify_notification(data)):
         return HttpResponseBadRequest('Improper Signature')
 

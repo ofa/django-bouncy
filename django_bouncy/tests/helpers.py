@@ -12,6 +12,7 @@ class BouncyTestCase(TestCase):
     """Custom TestCase for django-bouncy"""
     @classmethod
     def setUpClass(cls):
+        """Setup the BouncyTestCase Class"""
         super(BouncyTestCase, cls).setUpClass()
         cls.old_setting = getattr(settings, 'BOUNCY_TOPIC_ARN', None)
         cls.notification = loader('bounce_notification')
@@ -23,6 +24,7 @@ class BouncyTestCase(TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        """Tear down the BouncyTestCase Class"""
         if cls.old_setting != None:
             settings.BOUNCY_TOPIC_ARN = cls.old_setting
 
