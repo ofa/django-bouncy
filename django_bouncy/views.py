@@ -85,7 +85,7 @@ def endpoint(request):
         # We won't handle unsubscribe requests here. Return a 200 status code
         # so Amazon won't redeliver the request. If you want to remove this
         # endpoint, remove it either via the API or the AWS Console
-        return HttpResponse('')
+        return HttpResponse('UnsubscribeConfirmation Not Handled')
 
     try:
         message = json.loads(data['Message'])

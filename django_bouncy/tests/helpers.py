@@ -15,6 +15,9 @@ class BouncyTestCase(TestCase):
         super(BouncyTestCase, cls).setUpClass()
         cls.old_setting = getattr(settings, 'BOUNCY_TOPIC_ARN', None)
         cls.notification = loader('bounce_notification')
+        cls.complaint = loader('complaint')
+        cls.bounce = loader('bounce')
+
         settings.BOUNCY_TOPIC_ARN = \
             'arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes'
 
