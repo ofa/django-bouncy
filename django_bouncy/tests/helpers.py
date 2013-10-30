@@ -3,7 +3,7 @@
 import os
 import json
 
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.test.utils import override_settings
 from django.conf import settings
 
@@ -14,13 +14,9 @@ class BouncyTestCase(TestCase):
     def setUpClass(cls):
         super(BouncyTestCase, cls).setUpClass()
         cls.old_setting = getattr(settings, 'BOUNCY_TOPIC_ARN', None)
+        cls.notification = loader('bounce_notification')
         settings.BOUNCY_TOPIC_ARN = \
             'arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes'
-
-        cls.factory = RequestFactory()
-        cls.request = cls.factory.post('/')
-        cls.request.META['HTTP_X_AMZ_SNS_TOPIC_ARN'] = \
-            settings.BOUNCY_TOPIC_ARN
 
     @classmethod
     def tearDownClass(cls):

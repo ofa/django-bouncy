@@ -3,6 +3,7 @@
 
 import json
 
+from django.test import RequestFactory
 from django.test.utils import override_settings
 
 from django_bouncy.tests.helpers import BouncyTestCase, loader
@@ -13,7 +14,10 @@ class BouncyEndpointViewTest(BouncyTestCase):
     """Test the endpoint view"""
     def setUp(self):
         """Setup the test"""
-        self.notification = loader('bounce_notification')
+        self.factory = RequestFactory()
+        self.request = self.factory.post('/')
+        self.request.META['HTTP_X_AMZ_SNS_TOPIC_ARN'] = \
+            settings.BOUNCY_TOPIC_ARN
 
     def test_success(self):
         """Test a successful request"""
