@@ -57,9 +57,12 @@ def grab_keyfile(cert_url):
         pemfile = response.read()
         # Extract the first certificate in the file and confirm it's a valid PEM
         # certificate
-        certificate = pem.parse(pemfile)[0]
-        if not type(certificate) == pem.Certificate:
-            raise Exception('Bad Certificate')
+        certificates = pem.parse(pemfile)
+
+        # A proper certificate file will contain 1 certificate
+        if len(certificates) != 1:
+            raise ValueError('Invalid Certificate File')
+
         key_cache.set(cert_url, pemfile)
     return pemfile
 

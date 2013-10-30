@@ -7,6 +7,8 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from django.conf import settings
 
+DIRNAME, _ = os.path.split(os.path.abspath(__file__))
+
 @override_settings(BOUNCY_VERIFY_CERTIFICATE=False)
 class BouncyTestCase(TestCase):
     """Custom TestCase for django-bouncy"""
@@ -18,6 +20,9 @@ class BouncyTestCase(TestCase):
         cls.notification = loader('bounce_notification')
         cls.complaint = loader('complaint')
         cls.bounce = loader('bounce')
+        cls.keyfileobj = open(DIRNAME + \
+            '/SimpleNotificationService-e372f8ca30337fdb084e8ac449342c77.pem')
+        cls.pemfile = cls.keyfileobj.read()
 
         settings.BOUNCY_TOPIC_ARN = \
             'arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes'
@@ -32,6 +37,5 @@ def loader(example_name):
     """Load examples from their JSON file and return a dictionary"""
     filename_format = '{dir}/example_{name}.json'
 
-    dirname, _ = os.path.split(os.path.abspath(__file__))
-    file_obj = open(filename_format.format(dir=dirname, name=example_name))
+    file_obj = open(filename_format.format(dir=DIRNAME, name=example_name))
     return json.load(file_obj)
