@@ -2,6 +2,7 @@
 import json
 import urllib
 import re
+import logging
 
 from django.http import HttpResponseBadRequest, HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
@@ -27,6 +28,8 @@ ALLOWED_TYPES = [
     'Notification', 'SubscriptionConfirmation', 'UnsubscribeConfirmation'
 ]
 
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
 @require_POST
 def endpoint(request):
@@ -50,15 +53,18 @@ def endpoint(request):
     try:
         data = json.loads(request.body)
     except ValueError:
+        logger.warning('Notification Not Valid JSON')
         return HttpResponseBadRequest('Not Valid JSON')
 
     # Ensure that the JSON we're provided contains all the keys we expect
     # Comparison code from http://stackoverflow.com/questions/1285911/
     if not set(VITAL_NOTIFICATION_FIELDS) <= set(data):
+        logger.warning('Request Missing Necessary Keys')
         return HttpResponseBadRequest('Request Missing Necessary Keys')
 
     # Ensure that the type of notification is one we'll accept
     if not data['Type'] in ALLOWED_TYPES:
+        logger.info('Notification Type Not Known %s', data['Type'])
         return HttpResponseBadRequest('Unknown Notification Type')
 
     # Confirm that the signing certificate is hosted on a correct domain
@@ -70,11 +76,13 @@ def endpoint(request):
         settings, 'BOUNCY_CERT_DOMAIN_REGEX', r"sns.[a-z0-9\-]+.amazonaws.com$"
     )
     if not re.search(pattern, domain):
+        logger.warning('Improper Certificate Location %s', data['SigningCertURL'])
         return HttpResponseBadRequest('Improper Certificate Location')
 
     # Verify that the notification is signed by Amazon
     if (getattr(settings, 'BOUNCY_VERIFY_CERTIFICATE', True)
         and not verify_notification(data)):
+        logger.error('Verification Failure %s', )
         return HttpResponseBadRequest('Improper Signature')
 
     # Handle subscription-based messages.
@@ -87,6 +95,7 @@ def endpoint(request):
         # We won't handle unsubscribe requests here. Return a 200 status code
         # so Amazon won't redeliver the request. If you want to remove this
         # endpoint, remove it either via the API or the AWS Console
+        logger.info('UnsubscribeConfirmation Not Handled')
         return HttpResponse('UnsubscribeConfirmation Not Handled')
 
     try:
@@ -94,6 +103,7 @@ def endpoint(request):
     except ValueError:
         # This message is not JSON. But we need to return a 200 status code
         # so that Amazon doesn't attempt to deliver the message again
+        logger.info('Non-Valid JSON Message Received')
         return HttpResponse('Message is not valid JSON')
 
     return process_message(message, data)
@@ -108,6 +118,7 @@ def process_message(message, notification):
         # At this point we're sure that it's Amazon sending the message
         # If we don't return a 200 status code, Amazon will attempt to send us
         # this same message a few seconds later.
+        logger.info('JSON Message Missing Vital Fields')
         return HttpResponse('Missing Vital Fields')
 
     if message['notificationType'] == 'Complaint':
@@ -145,6 +156,8 @@ def process_bounce(message, notification):
 
     Bounce.objects.bulk_create(bounces)
 
+    logger.info('Logged %s Bounce(s)', str(len(bounces)))
+
     return HttpResponse('Bounce Processed')
 
 
@@ -175,5 +188,7 @@ def process_complaint(message, notification):
         )]
 
     Complaint.objects.bulk_create(complaints)
+
+    logger.info('Logged %s Complaint(s)', str(len(complaints)))
 
     return HttpResponse('Complaint Processed')

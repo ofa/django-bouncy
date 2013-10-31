@@ -4,6 +4,7 @@ import urllib
 import base64
 import re
 import pem
+import logging
 
 from OpenSSL import crypto
 from django.conf import settings
@@ -41,6 +42,9 @@ Type
 {Type}
 '''
 
+logger = logging.getLogger(__name__)
+
+
 def grab_keyfile(cert_url):
     """
     Function to acqure the keyfile
@@ -61,6 +65,7 @@ def grab_keyfile(cert_url):
 
         # A proper certificate file will contain 1 certificate
         if len(certificates) != 1:
+            logger.error('Invalid Certificate File: URL %s', cert_url)
             raise ValueError('Invalid Certificate File')
 
         key_cache.set(cert_url, pemfile)
@@ -105,12 +110,15 @@ def approve_subscription(data):
         r"sns.[a-z0-9\-]+.amazonaws.com$"
     )
     if not re.search(pattern, domain):
+        logger.error('Invalid Subscription Domain %s', url)
         return HttpResponseBadRequest('Improper Subscription Domain')
 
     try:
         result = urllib2.urlopen(url).read()
+        logger.info('Subscription Request Sent %s', url)
     except urllib2.HTTPError as error:
         result = error.read()
+        logger.warning('HTTP Error Creating Subscription %s', str(result))
 
     # Return a 200 Status Code
     return HttpResponse(unicode(result))
