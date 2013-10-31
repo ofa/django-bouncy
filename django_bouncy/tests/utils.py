@@ -1,5 +1,6 @@
 """Tests for utils.py in the django-bouncy app"""
 
+from django.conf import settings
 from mock import Mock, patch
 
 from django_bouncy.tests.helpers import BouncyTestCase, loader
@@ -66,3 +67,35 @@ class TestVerificationSystem(BouncyTestCase):
         result = utils.verify_notification(notification)
 
         self.assertFalse(result)
+
+
+class SubscriptionApprovalTest(BouncyTestCase):
+    """Test the approve_subscription function"""
+    @patch('django_bouncy.utils.urllib2.urlopen')
+    def test_approve_subscription(self, mock):
+        """Test the subscription approval mechanism"""
+        responsemock = Mock()
+        responsemock.read.return_value = 'Return Value'
+        mock.return_value = responsemock
+        notification = loader('subscriptionconfirmation')
+
+        response = utils.approve_subscription(notification)
+
+        mock.assert_called_with(notification['SubscribeURL'])
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, 'Return Value')
+
+    def test_bad_url(self):
+        """Test to make sure an invalid URL isn't requested by our system"""
+        old_setting = getattr(settings, 'BOUNCY_SUBSCRIBE_DOMAIN_REGEX', None)
+        settings.BOUNCY_SUBSCRIBE_DOMAIN_REGEX = \
+            r"sns.[a-z0-9\-]+.amazonaws.com$"
+        notification = loader('bounce_notification')
+        notification['SubscribeURL'] = 'http://bucket.s3.amazonaws.com'
+        result = utils.approve_subscription(notification)
+
+        self.assertEqual(result.status_code, 400)
+        self.assertEqual(result.content, 'Improper Subscription Domain')
+
+        if old_setting is not None:
+            settings.BOUNCY_SUBSCRIBE_DOMAIN_REGEX = old_setting
