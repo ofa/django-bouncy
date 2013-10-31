@@ -19,7 +19,7 @@ Configuration Options
 ---------------------
 There are multiple configuration options avalable for you to include in your django settings file.
 
-``BOUNCY_TOPIC_ARN`` - A string or list of one or more SNS topics the app is authorized to pay attention to. It is highly recommended you set this setting, especially if you did not disable ``BOUNCY_AUTO_SUBSCRIBE``, as a third party could create their own topic on their own SES account pointed to your django-bouncy endpoint, allowing them to batch create bounces that django-bouncy will recognize as valid. Default: ``None``
+``BOUNCY_TOPIC_ARN`` - A list of one or more SNS topics the app is authorized to pay attention to. It is highly recommended you set this setting, especially if you did not disable ``BOUNCY_AUTO_SUBSCRIBE``, as a third party could create their own topic on their own SES account pointed to your django-bouncy endpoint, allowing them to batch create bounces that django-bouncy will recognize as valid. Default: ``None``
 
 ``BOUNCY_AUTO_SUBSCRIBE`` - All SNS endpoints must verify with Amazon that they are willing to accept SNS notifications. This is done via a SubscriptionNotification sent when you first add a new endpoint, which will contain a unique temporary URL that must be either polled via either a GET request or passed back to Amazon via the API. By default django-bouncy will acknoledge and confirm with Amazon any subscription request sent to it. It does this by visiting the SubscribeURL provided by a SubscriptionNotification.
 

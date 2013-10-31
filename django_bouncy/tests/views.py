@@ -22,7 +22,7 @@ class BouncyEndpointViewTest(BouncyTestCase):
         self.factory = RequestFactory()
         self.request = self.factory.post('/')
         self.request.META['HTTP_X_AMZ_SNS_TOPIC_ARN'] = \
-            settings.BOUNCY_TOPIC_ARN
+            settings.BOUNCY_TOPIC_ARN[0]
 
     def test_success(self):
         """Test a successful request"""
@@ -31,7 +31,7 @@ class BouncyEndpointViewTest(BouncyTestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'Bounce Processed')
 
-    @override_settings(BOUNCY_TOPIC_ARN='Bad ARN')
+    @override_settings(BOUNCY_TOPIC_ARN=['Bad ARN'])
     def test_bad_topic(self):
         """Test the response if the topic does not match the settings"""
         self.request._body = json.dumps(self.notification)

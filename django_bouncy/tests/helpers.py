@@ -25,7 +25,7 @@ class BouncyTestCase(TestCase):
         cls.pemfile = cls.keyfileobj.read()
 
         settings.BOUNCY_TOPIC_ARN = \
-            'arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes'
+            ['arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes']
 
     @classmethod
     def tearDownClass(cls):

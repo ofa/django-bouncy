@@ -44,7 +44,7 @@ def endpoint(request):
 
         # Check to see if the topic is in the settings
         # Because you can have bounces and complaints coming from multiple
-        # topics, BOUNCY_TOPIC_ARN can be a string or list
+        # topics, BOUNCY_TOPIC_ARN is a list
         if (not request.META['HTTP_X_AMZ_SNS_TOPIC_ARN']
             in settings.BOUNCY_TOPIC_ARN):
             return HttpResponseBadRequest('Bad Topic')

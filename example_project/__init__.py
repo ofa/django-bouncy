@@ -14,7 +14,7 @@ DATABASES = {
     }
 }
 
-BOUNCY_TOPIC_ARN = 'arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes'
+BOUNCY_TOPIC_ARN = ['arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes']
 
 INSTALLED_APPS = (
     'django.contrib.auth',
