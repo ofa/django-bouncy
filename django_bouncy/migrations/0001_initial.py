@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('modified_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('sns_topic', self.gf('django.db.models.fields.CharField')(max_length=350, db_index=True)),
+            ('sns_topic', self.gf('django.db.models.fields.CharField')(max_length=350)),
             ('sns_messageid', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('mail_timestamp', self.gf('django.db.models.fields.DateTimeField')()),
             ('mail_id', self.gf('django.db.models.fields.CharField')(max_length=100)),
@@ -36,7 +36,7 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('modified_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('sns_topic', self.gf('django.db.models.fields.CharField')(max_length=350, db_index=True)),
+            ('sns_topic', self.gf('django.db.models.fields.CharField')(max_length=350)),
             ('sns_messageid', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('mail_timestamp', self.gf('django.db.models.fields.DateTimeField')()),
             ('mail_id', self.gf('django.db.models.fields.CharField')(max_length=100)),
@@ -78,7 +78,7 @@ class Migration(SchemaMigration):
             'modified_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'reporting_mta': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'sns_messageid': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'sns_topic': ('django.db.models.fields.CharField', [], {'max_length': '350', 'db_index': 'True'}),
+            'sns_topic': ('django.db.models.fields.CharField', [], {'max_length': '350'}),
             'status': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '150', 'null': 'True', 'blank': 'True'})
         },
         u'django_bouncy.complaint': {
@@ -95,7 +95,7 @@ class Migration(SchemaMigration):
             'mail_timestamp': ('django.db.models.fields.DateTimeField', [], {}),
             'modified_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'sns_messageid': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'sns_topic': ('django.db.models.fields.CharField', [], {'max_length': '350', 'db_index': 'True'}),
+            'sns_topic': ('django.db.models.fields.CharField', [], {'max_length': '350'}),
             'useragent': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         }
     }
