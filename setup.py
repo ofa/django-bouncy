@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
-from setuptools import setup
+from setuptools import setup, find_packages
 import textwrap
 
 setup(
     name='django-bouncy',
     version='0.0.1',
     author='Nick Catalano',
-    packages=['django_bouncy',],
+    packages=find_packages(),
     url='https://github.com/ofa/django-bouncy',
     description="A way to handle bounce and abuse reports delivered by Amazon's Simple Notification Service regarding emails sent by Simple Email Service",
     long_description=textwrap.dedent(open('README.rst', 'r').read()),
