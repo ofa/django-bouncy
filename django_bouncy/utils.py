@@ -13,6 +13,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils import timezone
 import dateutil.parser
 
+from django_bouncy import signals
 
 NOTIFICATION_HASH_FORMAT = '''Message
 {Message}
@@ -119,6 +120,12 @@ def approve_subscription(data):
     except urllib2.HTTPError as error:
         result = error.read()
         logger.warning('HTTP Error Creating Subscription %s', str(result))
+
+    signals.subscription.send(
+        sender='bouncy_approve_subscription',
+        result=result,
+        notification=data
+    )
 
     # Return a 200 Status Code
     return HttpResponse(unicode(result))

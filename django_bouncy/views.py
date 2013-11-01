@@ -13,6 +13,7 @@ from django_bouncy.utils import (
     verify_notification, approve_subscription, clean_time
 )
 from django_bouncy.models import Bounce, Complaint
+from django_bouncy import signals
 
 VITAL_NOTIFICATION_FIELDS = [
     'Type', 'Message', 'Timestamp', 'Signature',
@@ -76,7 +77,8 @@ def endpoint(request):
         settings, 'BOUNCY_CERT_DOMAIN_REGEX', r"sns.[a-z0-9\-]+.amazonaws.com$"
     )
     if not re.search(pattern, domain):
-        logger.warning('Improper Certificate Location %s', data['SigningCertURL'])
+        logger.warning(
+            'Improper Certificate Location %s', data['SigningCertURL'])
         return HttpResponseBadRequest('Improper Certificate Location')
 
     # Verify that the notification is signed by Amazon
@@ -84,6 +86,10 @@ def endpoint(request):
         and not verify_notification(data)):
         logger.error('Verification Failure %s', )
         return HttpResponseBadRequest('Improper Signature')
+
+    # Send a signal to say a valid notification has been received
+    signals.notification.send(
+        sender='bouncy_endpoint', notification=data, request=request)
 
     # Handle subscription-based messages.
     if data['Type'] == 'SubscriptionConfirmation':
@@ -136,7 +142,8 @@ def process_bounce(message, notification):
 
     bounces = []
     for recipient in bounce['bouncedRecipients']:
-        bounces += [Bounce(
+        # Create each bounce record. Add to a list for reference later.
+        bounces += [Bounce.objects.create(
             sns_topic=notification['TopicArn'],
             sns_messageid=notification['MessageId'],
             mail_timestamp=clean_time(mail['timestamp']),
@@ -154,7 +161,14 @@ def process_bounce(message, notification):
             diagnostic_code=recipient.get('diagnosticCode')
         )]
 
-    Bounce.objects.bulk_create(bounces)
+    # Send signals for each bounce.
+    for bounce in bounces:
+        signals.feedback.send(
+            sender=Bounce,
+            instance=bounce,
+            message=message,
+            notification=notification
+        )
 
     logger.info('Logged %s Bounce(s)', str(len(bounces)))
 
@@ -173,7 +187,8 @@ def process_complaint(message, notification):
 
     complaints = []
     for recipient in complaint['complainedRecipients']:
-        complaints += [Complaint(
+        # Create each Complaint. Save in a list for reference later.
+        complaints += [Complaint.objects.create(
             sns_topic=notification['TopicArn'],
             sns_messageid=notification['MessageId'],
             mail_timestamp=clean_time(mail['timestamp']),
@@ -187,7 +202,14 @@ def process_complaint(message, notification):
             arrival_date=arrival_date
         )]
 
-    Complaint.objects.bulk_create(complaints)
+    # Send signals for each complaint.
+    for complaint in complaints:
+        signals.feedback.send(
+            sender=Complaint,
+            instance=complaint,
+            message=message,
+            notification=notification
+        )
 
     logger.info('Logged %s Complaint(s)', str(len(complaints)))
 

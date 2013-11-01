@@ -7,10 +7,11 @@ from django.test import RequestFactory
 from django.test.utils import override_settings
 from django.http import Http404
 from django.conf import settings
+from django.dispatch import receiver
 from mock import patch
 
 from django_bouncy.tests.helpers import BouncyTestCase, loader
-from django_bouncy import views
+from django_bouncy import views, signals
 from django_bouncy.utils import clean_time
 from django_bouncy.models import Bounce, Complaint
 
@@ -30,6 +31,31 @@ class BouncyEndpointViewTest(BouncyTestCase):
         result = views.endpoint(self.request)
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'Bounce Processed')
+
+    def test_signals_sent(self):
+        """
+        Test that a notification feedback signal was sent
+
+        Based on http://stackoverflow.com/questions/3817213/
+        """
+        # pylint: disable=attribute-defined-outside-init, unused-variable
+        self.request._body = json.dumps(self.notification)
+        self.signal_count = 0
+
+        @receiver(signals.notification)
+        def _signal_receiver(sender, **kwargs):
+            """Signal test receiver"""
+            # pylint: disable=unused-argument
+            self.signal_count += 1
+            self.signal_notification = kwargs['notification']
+            self.signal_request = kwargs['request']
+
+        result = views.endpoint(self.request)
+
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(self.signal_count, 1)
+        self.assertEqual(self.signal_request, self.request)
+        self.assertEqual(self.signal_notification, self.notification)
 
     @override_settings(BOUNCY_TOPIC_ARN=['Bad ARN'])
     def test_bad_topic(self):
@@ -165,6 +191,25 @@ class ProcessBounceTest(BouncyTestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'Bounce Processed')
 
+    def test_signals_sent(self):
+        """Test that a bounce feedback signal was sent"""
+        # pylint: disable=attribute-defined-outside-init, unused-variable
+        self.signal_count = 0
+
+        @receiver(signals.feedback)
+        def _signal_receiver(sender, **kwargs):
+            """Test signal receiver"""
+            # pylint: disable=unused-argument
+            self.signal_count += 1
+            self.signal_notification = kwargs['notification']
+
+        result = views.process_bounce(self.bounce, self.notification)
+
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.content, 'Bounce Processed')
+        self.assertEqual(self.signal_count, 2)
+        self.assertEqual(self.signal_notification, self.notification)
+
     def test_correct_bounces_created(self):
         """Test to ensure that bounces are correctly inserted"""
         # Delete any existing bounces
@@ -210,6 +255,28 @@ class ProcessComplaintTest(BouncyTestCase):
         self.assertEqual(new_count, original_count + 1)
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'Complaint Processed')
+
+    def test_signals_sent(self):
+        """Test that a complaint feedback signal was sent"""
+        # pylint: disable=attribute-defined-outside-init, unused-variable
+        self.signal_count = 0
+
+        @receiver(signals.feedback)
+        def _signal_receiver(sender, **kwargs):
+            """Test signal receiver"""
+            # pylint: disable=unused-argument
+            self.signal_count += 1
+            self.signal_notification = kwargs['notification']
+            self.signal_message = kwargs['message']
+
+        result = views.process_complaint(
+            self.complaint, self.complaint_notification)
+
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.content, 'Complaint Processed')
+        self.assertEqual(self.signal_count, 1)
+        self.assertEqual(self.signal_notification, self.complaint_notification)
+
 
     def test_correct_complaint_created(self):
         """Test that the correct complaint was created"""

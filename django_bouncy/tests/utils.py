@@ -1,10 +1,11 @@
 """Tests for utils.py in the django-bouncy app"""
 
 from django.conf import settings
+from django.dispatch import receiver
 from mock import Mock, patch
 
 from django_bouncy.tests.helpers import BouncyTestCase, loader
-from django_bouncy import utils
+from django_bouncy import utils, signals
 
 class TestVerificationSystem(BouncyTestCase):
     """Test the message verification utilities"""
@@ -84,6 +85,35 @@ class SubscriptionApprovalTest(BouncyTestCase):
         mock.assert_called_with(notification['SubscribeURL'])
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, 'Return Value')
+
+    @patch('django_bouncy.utils.urllib2.urlopen')
+    def test_signal_sent(self, mock):
+        """
+        Test that the subscription signal was sent
+
+        Based on http://stackoverflow.com/questions/3817213/
+        """
+        # pylint: disable=attribute-defined-outside-init, unused-variable
+        responsemock = Mock()
+        responsemock.read.return_value = 'Return Value'
+        mock.return_value = responsemock
+        notification = loader('subscriptionconfirmation')
+        self.signal_count = 0
+
+        @receiver(signals.subscription)
+        def _signal_receiver(sender, **kwargs):
+            """Signal Test Receiver"""
+            self.signal_count += 1
+            self.signal_sender = sender
+            self.signal_notification = kwargs['notification']
+            self.signal_result = kwargs['result']
+
+        response = utils.approve_subscription(notification)
+
+        self.assertEqual(response.content, 'Return Value')
+        self.assertEqual(self.signal_count, 1)
+        self.assertEqual(self.signal_result, 'Return Value')
+        self.assertEqual(self.signal_notification, notification)
 
     def test_bad_url(self):
         """Test to make sure an invalid URL isn't requested by our system"""
