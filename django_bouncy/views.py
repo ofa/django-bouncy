@@ -6,7 +6,6 @@ import logging
 
 from django.http import HttpResponseBadRequest, HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
 from django.conf import settings
 
 from django_bouncy.utils import (
@@ -32,10 +31,14 @@ ALLOWED_TYPES = [
 logger = logging.getLogger(__name__)
 
 @csrf_exempt
-@require_POST
 def endpoint(request):
     """Default view endpoint"""
     # pylint: disable=too-many-return-statements
+
+    # In order to 'hide' the endpoint, all non-POST requests should return
+    # the site's default HTTP404
+    if request.method != 'POST':
+        raise Http404
 
     # If necessary, check that the topic is correct
     if hasattr(settings, 'BOUNCY_TOPIC_ARN'):

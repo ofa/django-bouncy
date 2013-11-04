@@ -25,6 +25,14 @@ class BouncyEndpointViewTest(BouncyTestCase):
         self.request.META['HTTP_X_AMZ_SNS_TOPIC_ARN'] = \
             settings.BOUNCY_TOPIC_ARN[0]
 
+
+    def test_non_post_http404(self):
+        """Test that GET requests to the endpoint throw a 404"""
+        request = self.factory.get('/')
+        with self.assertRaises(Http404):
+            views.endpoint(request)
+
+
     def test_success(self):
         """Test a successful request"""
         self.request._body = json.dumps(self.notification)
