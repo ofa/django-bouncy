@@ -32,8 +32,8 @@ logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def endpoint(request):
-    """Default view endpoint"""
-    # pylint: disable=too-many-return-statements
+    """Endpoint that SNS accesses. Includes logic verifying request"""
+    # pylint: disable=too-many-return-statements,too-many-branches
 
     # In order to 'hide' the endpoint, all non-POST requests should return
     # the site's default HTTP404
