@@ -12,7 +12,7 @@ class Feedback(models.Model):
     mail_from = models.EmailField()
     address = models.EmailField()
     feedback_id = models.CharField(max_length=100)
-    feedback_timestamp = models.DateTimeField()
+    feedback_timestamp = models.DateTimeField(verbose_name="Feedback Time")
 
     class Meta(object):
         """Meta info for Feedback Abstract Model"""
@@ -21,20 +21,36 @@ class Feedback(models.Model):
 
 class Bounce(Feedback):
     """A bounce report for an individual email address"""
-    hard = models.BooleanField(db_index=True)
-    bounce_type = models.CharField(db_index=True, max_length=50)
-    bounce_subtype = models.CharField(db_index=True, max_length=50)
+    hard = models.BooleanField(db_index=True, verbose_name="Hard Bounce")
+    bounce_type = models.CharField(
+        db_index=True, max_length=50, verbose_name="Bounce Type")
+    bounce_subtype = models.CharField(
+        db_index=True, max_length=50, verbose_name="Bounce Subtype")
     reporting_mta = models.TextField(blank=True, null=True)
     action = models.CharField(
-        db_index=True, null=True, blank=True, max_length=150)
+        db_index=True, null=True, blank=True, max_length=150,
+        verbose_name="Action"
+    )
     status = models.CharField(
         db_index=True, null=True, blank=True, max_length=150)
     diagnostic_code = models.CharField(null=True, blank=True, max_length=150)
+
+    def __unicode__(self):
+        """Unicode representation of Bounce"""
+        return "%s %s Bounce (message from %s)" % (
+            self.address, self.bounce_type, self.mail_from)
 
 
 class Complaint(Feedback):
     """A complaint report for an individual email address"""
     useragent = models.TextField(blank=True, null=True)
     feedback_type = models.CharField(
-        db_index=True, blank=True, null=True, max_length=150)
+        db_index=True, blank=True, null=True, max_length=150,
+        verbose_name="Complaint Type"
+    )
     arrival_date = models.DateTimeField(blank=True, null=True)
+
+    def __unicode__(self):
+        """Unicode representation of Complaint"""
+        return "%s Complaint (email sender: from %s)" % (
+            self.address, self.mail_from)
