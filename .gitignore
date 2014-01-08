@@ -8,3 +8,4 @@ dist/
 coverage.xml
 nosetests.xml
 example.db
+pep8.txt

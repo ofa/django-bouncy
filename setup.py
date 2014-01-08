@@ -27,11 +27,15 @@ setup(
         'South>=0.8.1',
         'python-dateutil>=2.1',
         'pyopenssl>=0.13.1',
-        'pem>=0.1.0'
+        'pem>=0.1.0',
+        'python-dateutil==2.2'
     ],
     tests_require=[
-          'mock>=1.0.1'
+          'nose==1.3',
+          'django-setuptest==0.1.4',
+          'mock==1.0.1'
     ],
+    test_suite='setuptest.setuptest.SetupTestSuite',
     keywords = "aws ses sns seacucumber boto",
     classifiers=['Development Status :: 4 - Beta', 'Intended Audience :: Developers', 'Topic :: Internet :: WWW/HTTP']
 )
