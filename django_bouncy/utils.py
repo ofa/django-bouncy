@@ -12,7 +12,7 @@ except ImportError:
     from urllib import urlopen
 
 try:
-    from urllib import urlparse
+    from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse
 
