@@ -183,7 +183,7 @@ def process_complaint(message, notification):
     mail = message['mail']
     complaint = message['complaint']
 
-    if complaint.has_key('arrivalDate'):
+    if 'arrivalDate' in complaint:
         arrival_date = clean_time(complaint['arrivalDate'])
     else:
         arrival_date = None
