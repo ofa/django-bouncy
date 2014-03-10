@@ -1,0 +1,8 @@
+<ConfirmSubscriptionResponse xmlns="http://sns.amazonaws.com/doc/2010-03-31/">
+  <ConfirmSubscriptionResult>
+    <SubscriptionArn>arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes:ea3b6375-551a-48a0-b318-d6b66585ae6f</SubscriptionArn>
+  </ConfirmSubscriptionResult>
+  <ResponseMetadata>
+    <RequestId>4fd74d83-9d08-514d-9e0c-07681954c4f6</RequestId>
+  </ResponseMetadata>
+</ConfirmSubscriptionResponse>

@@ -1,6 +1,10 @@
 """Views for the django_bouncy app"""
 import json
-import urllib
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
+
 import re
 import logging
 
@@ -43,7 +47,7 @@ def endpoint(request):
     # If necessary, check that the topic is correct
     if hasattr(settings, 'BOUNCY_TOPIC_ARN'):
         # Confirm that the proper topic header was sent
-        if not request.META.has_key('HTTP_X_AMZ_SNS_TOPIC_ARN'):
+        if not 'HTTP_X_AMZ_SNS_TOPIC_ARN' in request.META:
             return HttpResponseBadRequest('No TopicArn Header')
 
         # Check to see if the topic is in the settings
@@ -75,7 +79,7 @@ def endpoint(request):
     # AWS by default uses sns.{region}.amazonaws.com
     # On the off chance you need this to be a different domain, allow the
     # regex to be overridden in settings
-    domain = urllib.urlparse(data['SigningCertURL']).netloc
+    domain = urlparse(data['SigningCertURL']).netloc
     pattern = getattr(
         settings, 'BOUNCY_CERT_DOMAIN_REGEX', r"sns.[a-z0-9\-]+.amazonaws.com$"
     )

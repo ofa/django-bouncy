@@ -1,15 +1,21 @@
 """Tests for utils.py in the django-bouncy app"""
 
+
 from django.conf import settings
 from django.dispatch import receiver
-from mock import Mock, patch
+try:
+    # Python 2.6/2.7
+    from mock import Mock, patch
+except ImportError:
+    # Python 3
+    from unittest.mock import Mock, patch
 
 from django_bouncy.tests.helpers import BouncyTestCase, loader
 from django_bouncy import utils, signals
 
 class TestVerificationSystem(BouncyTestCase):
     """Test the message verification utilities"""
-    @patch('django_bouncy.utils.urllib2.urlopen')
+    @patch('django_bouncy.utils.urlopen')
     def test_grab_keyfile(self, mock):
         """Test the grab_keyfile plugin"""
         responsemock = Mock()
@@ -20,7 +26,7 @@ class TestVerificationSystem(BouncyTestCase):
         mock.assert_called_with('http://www.fakeurl.com')
         self.assertEqual(result, self.pemfile)
 
-    @patch('django_bouncy.utils.urllib2.urlopen')
+    @patch('django_bouncy.utils.urlopen')
     def test_bad_keyfile(self, mock):
         """Test a non-valid keyfile"""
         responsemock = Mock()
@@ -72,7 +78,7 @@ class TestVerificationSystem(BouncyTestCase):
 
 class SubscriptionApprovalTest(BouncyTestCase):
     """Test the approve_subscription function"""
-    @patch('django_bouncy.utils.urllib2.urlopen')
+    @patch('django_bouncy.utils.urlopen')
     def test_approve_subscription(self, mock):
         """Test the subscription approval mechanism"""
         responsemock = Mock()
@@ -84,9 +90,9 @@ class SubscriptionApprovalTest(BouncyTestCase):
 
         mock.assert_called_with(notification['SubscribeURL'])
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, 'Return Value')
+        self.assertEqual(response.content.decode('ascii'), 'Return Value')
 
-    @patch('django_bouncy.utils.urllib2.urlopen')
+    @patch('django_bouncy.utils.urlopen')
     def test_signal_sent(self, mock):
         """
         Test that the subscription signal was sent
@@ -110,7 +116,7 @@ class SubscriptionApprovalTest(BouncyTestCase):
 
         response = utils.approve_subscription(notification)
 
-        self.assertEqual(response.content, 'Return Value')
+        self.assertEqual(response.content.decode('ascii'), 'Return Value')
         self.assertEqual(self.signal_count, 1)
         self.assertEqual(self.signal_result, 'Return Value')
         self.assertEqual(self.signal_notification, notification)
@@ -125,7 +131,7 @@ class SubscriptionApprovalTest(BouncyTestCase):
         result = utils.approve_subscription(notification)
 
         self.assertEqual(result.status_code, 400)
-        self.assertEqual(result.content, 'Improper Subscription Domain')
+        self.assertEqual(result.content.decode('ascii'), 'Improper Subscription Domain')
 
         if old_setting is not None:
             settings.BOUNCY_SUBSCRIBE_DOMAIN_REGEX = old_setting

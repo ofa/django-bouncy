@@ -1,10 +1,26 @@
 """Utility functions for the django_bouncy app"""
-import urllib2
-import urllib
+try:
+    import urllib2 as urllib
+except ImportError:
+    import urllib
+
+try:
+    # Python 3
+    from urllib.request import urlopen
+except ImportError:
+    # Python 2.7
+    from urllib import urlopen
+
+try:
+    from urllib import urlparse
+except ImportError:
+    from urllib.parse import urlparse
+
 import base64
 import re
 import pem
 import logging
+import six
 
 from OpenSSL import crypto
 from django.conf import settings
@@ -58,7 +74,7 @@ def grab_keyfile(cert_url):
 
     pemfile = key_cache.get(cert_url)
     if not pemfile:
-        response = urllib2.urlopen(cert_url)
+        response = urlopen(cert_url)
         pemfile = response.read()
         # Extract the first certificate in the file and confirm it's a valid PEM
         # certificate
@@ -81,7 +97,7 @@ def verify_notification(data):
     """
     pemfile = grab_keyfile(data['SigningCertURL'])
     cert = crypto.load_certificate(crypto.FILETYPE_PEM, pemfile)
-    signature = base64.decodestring(data['Signature'])
+    signature = base64.decodestring(six.b(data['Signature']))
 
     if data['Type'] == "Notification":
         hash_format = NOTIFICATION_HASH_FORMAT
@@ -104,7 +120,7 @@ def approve_subscription(data):
     """
     url = data['SubscribeURL']
 
-    domain = urllib.urlparse(url).netloc
+    domain = urlparse(url).netloc
     pattern = getattr(
         settings,
         'BOUNCY_SUBSCRIBE_DOMAIN_REGEX',
@@ -115,9 +131,9 @@ def approve_subscription(data):
         return HttpResponseBadRequest('Improper Subscription Domain')
 
     try:
-        result = urllib2.urlopen(url).read()
+        result = urlopen(url).read()
         logger.info('Subscription Request Sent %s', url)
-    except urllib2.HTTPError as error:
+    except urllib.HTTPError as error:
         result = error.read()
         logger.warning('HTTP Error Creating Subscription %s', str(result))
 
@@ -128,7 +144,7 @@ def approve_subscription(data):
     )
 
     # Return a 200 Status Code
-    return HttpResponse(unicode(result))
+    return HttpResponse(six.u(result))
 
 
 def clean_time(time_string):
