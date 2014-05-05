@@ -34,6 +34,7 @@ ALLOWED_TYPES = [
 
 logger = logging.getLogger(__name__)
 
+
 @csrf_exempt
 def endpoint(request):
     """Endpoint that SNS accesses. Includes logic verifying request"""
@@ -54,7 +55,7 @@ def endpoint(request):
         # Because you can have bounces and complaints coming from multiple
         # topics, BOUNCY_TOPIC_ARN is a list
         if (not request.META['HTTP_X_AMZ_SNS_TOPIC_ARN']
-            in settings.BOUNCY_TOPIC_ARN):
+                in settings.BOUNCY_TOPIC_ARN):
             return HttpResponseBadRequest('Bad Topic')
 
     # Load the JSON POST Body
@@ -90,7 +91,7 @@ def endpoint(request):
 
     # Verify that the notification is signed by Amazon
     if (getattr(settings, 'BOUNCY_VERIFY_CERTIFICATE', True)
-        and not verify_notification(data)):
+            and not verify_notification(data)):
         logger.error('Verification Failure %s', )
         return HttpResponseBadRequest('Improper Signature')
 

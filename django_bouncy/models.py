@@ -1,6 +1,7 @@
 """Models for the django_bouncy app"""
 from django.db import models
 
+
 class Feedback(models.Model):
     """An abstract model for all SES Feedback Reports"""
     created_at = models.DateTimeField(auto_now_add=True)
