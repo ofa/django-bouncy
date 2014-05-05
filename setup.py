@@ -7,8 +7,13 @@ except ImportError:
     use_setuptools()
     from setuptools import setup
 
-import textwrap
 import os
+import sys
+import textwrap
+
+extra_tests_require = []
+if sys.version_info < (3, 0):
+    extra_tests_require.append('mock==1.0.1')
 
 ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -33,8 +38,7 @@ setup(
     tests_require=[
           'nose==1.3',
           'django-setuptest==0.1.4',
-          'mock==1.0.1'
-    ],
+    ] + extra_tests_require,
     test_suite='setuptest.setuptest.SetupTestSuite',
     keywords = "aws ses sns seacucumber boto",
     classifiers=['Development Status :: 4 - Beta', 'Intended Audience :: Developers', 'Topic :: Internet :: WWW/HTTP']
