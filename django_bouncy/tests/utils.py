@@ -1,6 +1,4 @@
 """Tests for utils.py in the django-bouncy app"""
-
-
 from django.conf import settings
 from django.dispatch import receiver
 try:
@@ -12,6 +10,7 @@ except ImportError:
 
 from django_bouncy.tests.helpers import BouncyTestCase, loader
 from django_bouncy import utils, signals
+
 
 class TestVerificationSystem(BouncyTestCase):
     """Test the message verification utilities"""
@@ -131,7 +130,8 @@ class SubscriptionApprovalTest(BouncyTestCase):
         result = utils.approve_subscription(notification)
 
         self.assertEqual(result.status_code, 400)
-        self.assertEqual(result.content.decode('ascii'), 'Improper Subscription Domain')
+        self.assertEqual(
+            result.content.decode('ascii'), 'Improper Subscription Domain')
 
         if old_setting is not None:
             settings.BOUNCY_SUBSCRIBE_DOMAIN_REGEX = old_setting
