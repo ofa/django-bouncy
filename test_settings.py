@@ -8,7 +8,6 @@ DATABASES = {
 }
 
 INSTALLED_APPS = (
-    'south',
     'django_bouncy',
 )
 

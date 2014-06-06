@@ -28,12 +28,10 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Django>=1.5',
-        'South>=0.8.1',
+        'Django>=1.4',
         'python-dateutil>=2.1',
         'pyopenssl>=0.13.1',
-        'pem>=0.1.0',
-        'python-dateutil==2.2'
+        'pem>=0.1.0'
     ],
     tests_require=[
           'nose==1.3',
