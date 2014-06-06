@@ -76,8 +76,8 @@ def grab_keyfile(cert_url):
     if not pemfile:
         response = urlopen(cert_url)
         pemfile = response.read()
-        # Extract the first certificate in the file and confirm it's a valid PEM
-        # certificate
+        # Extract the first certificate in the file and confirm it's a valid
+        # PEM certificate
         certificates = pem.parse(pemfile)
 
         # A proper certificate file will contain 1 certificate
@@ -116,7 +116,7 @@ def approve_subscription(data):
     Function to approve a SNS subscription with Amazon
 
     We don't do a ton of verification here, past making sure that the endpoint
-    we're instructed to go to to verify the subscription is on the correct host
+    we're told to go to to verify the subscription is on the correct host
     """
     url = data['SubscribeURL']
 
@@ -152,7 +152,7 @@ def clean_time(time_string):
     # Get a timezone-aware datetime object from the string
     time = dateutil.parser.parse(time_string)
     if not settings.USE_TZ:
-        # If timezone support is not active, convert the time to UTC and remove
-        # the timezone field
+        # If timezone support is not active, convert the time to UTC and
+        # remove the timezone field
         time = time.astimezone(timezone.utc).replace(tzinfo=None)
     return time

@@ -257,7 +257,7 @@ class ProcessBounceTest(BouncyTestCase):
             action='failed',
             status='5.0.0',
             diagnostic_code='smtp; 550 user unknown'
-            ).exists())
+        ).exists())
 
 
 class ProcessComplaintTest(BouncyTestCase):
@@ -320,4 +320,4 @@ class ProcessComplaintTest(BouncyTestCase):
             feedback_timestamp=clean_time('2012-05-25T14:59:38.623-07:00'),
             useragent='Comcast Feedback Loop (V0.01)',
             arrival_date=clean_time('2009-12-03T04:24:21.000-05:00')
-            ).exists())
+        ).exists())

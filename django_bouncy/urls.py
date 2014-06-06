@@ -4,6 +4,7 @@ from django.conf.urls import patterns
 
 from django_bouncy.views import endpoint
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     (r'^$', endpoint)
 )

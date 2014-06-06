@@ -127,7 +127,8 @@ def process_message(message, notification):
     """
     Function to process a JSON message delivered from Amazon
     """
-    # Confirm that there are 'notificationType' and 'mail' fields in our message
+    # Confirm that there are 'notificationType' and 'mail' fields in our
+    # message
     if not set(VITAL_MESSAGE_FIELDS) <= set(message):
         # At this point we're sure that it's Amazon sending the message
         # If we don't return a 200 status code, Amazon will attempt to send us
