@@ -36,7 +36,7 @@ class TestVerificationSystem(BouncyTestCase):
             utils.grab_keyfile('http://www.fakeurl.com')
 
         the_exception = context_manager.exception
-        self.assertEqual(the_exception[0], 'Invalid Certificate File')
+        self.assertEqual(the_exception.args[0], 'Invalid Certificate File')
 
     @patch('django_bouncy.utils.grab_keyfile')
     def test_verify_notification(self, mock):

@@ -105,8 +105,9 @@ def verify_notification(data):
         hash_format = SUBSCRIPTION_HASH_FORMAT
 
     try:
-        crypto.verify(cert, signature, hash_format.format(**data), 'sha1')
-    except Exception:
+        crypto.verify(
+            cert, signature, six.b(hash_format.format(**data)), 'sha1')
+    except crypto.Error:
         return False
     return True
 
