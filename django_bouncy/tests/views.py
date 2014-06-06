@@ -239,16 +239,16 @@ class ProcessBounceTest(BouncyTestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content.decode('ascii'), 'Bounce Processed')
         self.assertTrue(Bounce.objects.filter(
-            sns_topic=
-            'arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes',
+            sns_topic=('arn:aws:sns:us-east-1:250214102493:'
+                       'Demo_App_Unsubscribes'),
             sns_messageid='f34c6922-c3a1-54a1-bd88-23f998b43978',
             mail_timestamp=clean_time('2012-06-19T01:05:45.000Z'),
-            mail_id=
-            '00000138111222aa-33322211-cccc-cccc-cccc-ddddaaaa0680-000000',
+            mail_id=('00000138111222aa-33322211-cccc-cccc-cccc-'
+                     'ddddaaaa0680-000000'),
             mail_from='sender@example.com',
             address='recipient1@example.com',
-            feedback_id=
-            '000001378603176d-5a4b5ad9-6f30-4198-a8c3-b1eb0c270a1d-000000',
+            feedback_id=('000001378603176d-5a4b5ad9-6f30-4198-a8c3-'
+                         'b1eb0c270a1d-000000'),
             feedback_timestamp=clean_time('2012-05-25T14:59:38.605-07:00'),
             hard=True,
             bounce_type='Permanent',
@@ -307,16 +307,16 @@ class ProcessComplaintTest(BouncyTestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content.decode('ascii'), 'Complaint Processed')
         self.assertTrue(Complaint.objects.filter(
-            sns_topic=
-            'arn:aws:sns:us-east-1:250214102493:Demo_App_Unsubscribes',
+            sns_topic=('arn:aws:sns:us-east-1:250214102493:'
+                       'Demo_App_Unsubscribes'),
             sns_messageid='217eaf35-67ae-5230-874a-e5df4c5c71c0',
             mail_timestamp=clean_time('2012-05-25T14:59:38.623-07:00'),
-            mail_id=
-            '000001378603177f-7a5433e7-8edb-42ae-af10-f0181f34d6ee-000000',
+            mail_id=('000001378603177f-7a5433e7-8edb-42ae-af10-'
+                     'f0181f34d6ee-000000'),
             mail_from='email_1337983178623@amazon.com',
             address='recipient1@example.com',
-            feedback_id=
-            '000001378603177f-18c07c78-fa81-4a58-9dd1-fedc3cb8f49a-000000',
+            feedback_id=('000001378603177f-18c07c78-fa81-4a58-9dd1-'
+                         'fedc3cb8f49a-000000'),
             feedback_timestamp=clean_time('2012-05-25T14:59:38.623-07:00'),
             useragent='Comcast Feedback Loop (V0.01)',
             arrival_date=clean_time('2009-12-03T04:24:21.000-05:00')
