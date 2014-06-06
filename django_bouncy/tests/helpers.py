@@ -20,10 +20,8 @@ class BouncyTestCase(TestCase):
         cls.notification = loader('bounce_notification')
         cls.complaint = loader('complaint')
         cls.bounce = loader('bounce')
-        cls.keyfileobj = open(
-            DIRNAME +
-            '/SimpleNotificationService-e372f8ca30337fdb084e8ac449342c77.pem'
-        )
+        cls.keyfileobj = open(DIRNAME + '/examples/'
+            'SimpleNotificationService-e372f8ca30337fdb084e8ac449342c77.pem')
         cls.pemfile = cls.keyfileobj.read()
 
         settings.BOUNCY_TOPIC_ARN = [
@@ -39,7 +37,7 @@ class BouncyTestCase(TestCase):
 
 def loader(example_name):
     """Load examples from their JSON file and return a dictionary"""
-    filename_format = '{dir}/example_{name}.json'
+    filename_format = '{dir}/examples/example_{name}.json'
 
     file_obj = open(filename_format.format(dir=DIRNAME, name=example_name))
     return json.load(file_obj)
