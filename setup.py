@@ -15,12 +15,6 @@ extra_tests_require = []
 if sys.version_info < (3, 0):
     extra_tests_require.append('mock==1.0.1')
 
-extra_install_require = []
-if sys.version_info > (3, 0) and sys.version_info < (3, 3):
-    extra_install_require.append('pem==0.1.0')
-else:
-    extra_install_require.append('pem>=0.1.0')
-
 ROOT = os.path.abspath(os.path.dirname(__file__))
 
 setup(
@@ -36,8 +30,9 @@ setup(
     install_requires=[
         'Django>=1.4',
         'python-dateutil>=2.1',
-        'pyopenssl>=0.13.1'
-    ] + extra_install_require,
+        'pyopenssl>=0.13.1',
+        'pem>=0.1.0'
+    ],
     tests_require=[
           'nose>=1.3',
           'django-setuptest>=0.1.4',

@@ -1,8 +1,9 @@
 language: python
+# Test against 2.6, 2.7 and 3.3
+# We don't support 3.2 because the pem library doesn't support it
 python:
   - "2.6"
   - "2.7"
-  - "3.2"
   - "3.3"
   - "pypy"
 # command to define we should test against the latest version of all supported
@@ -20,16 +21,12 @@ matrix:
   fast_finish: true
   exclude:
     # Django doesn't support following combinations
-    - python: 3.2
-      env: MAX_DJANGO_VERSION=1.4.99
     - python: 3.3
       env: MAX_DJANGO_VERSION=1.4.99
-    - python: 3.2
-      env: MAX_DJANGO_VERSION=1.5.99
     - python: 3.3
       env: MAX_DJANGO_VERSION=1.5.99
   allow_failures:
-    # pypy support is experimental for the moment
+    # pypy testing support is experimental
     - python: pypy
     - env: MAX_DJANGO_VERSION=1.4.99
     - python: pypy
