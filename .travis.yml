@@ -28,11 +28,11 @@ matrix:
   allow_failures:
     # pypy testing support is experimental
     - python: "pypy"
-    - env: MAX_DJANGO_VERSION=1.4.99
+      env: MAX_DJANGO_VERSION=1.4.99
     - python: "pypy"
-    - env: MAX_DJANGO_VERSION=1.5.99
+      env: MAX_DJANGO_VERSION=1.5.99
     - python: "pypy"
-    - env: MAX_DJANGO_VERSION=1.6.99
+      env: MAX_DJANGO_VERSION=1.6.99
 # turn off email notifications
 notifications:
   email: false
