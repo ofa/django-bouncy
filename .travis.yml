@@ -1,0 +1,57 @@
+language: python
+# Test against 2.6, 2.7, 3.2 and 3.3
+# We don't support 3.2 because the pem library doesn't support it, but PEM
+# could change in the future so it's still worth testing against
+python:
+  - "2.6"
+  - "2.7"
+  - "3.2"
+  - "3.3"
+  - "pypy"
+# command to define we should test against the latest version of all supported
+# versions of django (1.4.*, 1.5.*, 1.6.*)
+env:
+  - MAX_DJANGO_VERSION=1.4.99
+  - MAX_DJANGO_VERSION=1.5.99
+  - MAX_DJANGO_VERSION=1.6.99
+# command to install dependencies (mock & nose are already installed)
+install:
+  - pip install django\<$MAX_DJANGO_VERSION
+# command to run tests
+script: python setup.py test
+matrix:
+  fast_finish: true
+  exclude:
+    # Django doesn't support following combinations
+    - python: "3.2"
+      env: MAX_DJANGO_VERSION=1.4.99
+    - python: "3.3"
+      env: MAX_DJANGO_VERSION=1.4.99
+  allow_failures:
+    # Python 3 in Django 1.5.* was not production-ready, but still supported
+    # so we should still test against it but not fail the build if there are
+    # any issues
+    - python: "3.2"
+      env: MAX_DJANGO_VERSION=1.5.99
+    - python: "3.3"
+      env: MAX_DJANGO_VERSION=1.5.99
+
+    # pypy testing support is experimental
+    - python: "pypy"
+
+    # Python 3.2 tends to not work due to PEM library issues
+    # But maybe someday the library will be fixed, so lets test against it
+    # anyways, but not fail the entire build if there is an issue
+    - python: "3.2"
+# turn off email notifications
+notifications:
+  email: false
+deploy:
+  # Allow travis-ci to deploy new tags to PyPI
+  provider: pypi
+  user: ofa
+  password:
+    secure: mynPDpo4PHD8VjYJ03Yui2Xr2ICxP56DEOfE4IOr8RRorqJH7BtrYrX4TkqYLb81IR9Mgnzbk9wslq7ShGfYhXgSFWujDPyCsliPG1v826FXEMe3U7yT5B+Vrt7xA6FkImCuZIROmrGL9KSbobFTsBnTL6/LxMZ6pTYCJiXyf9E=
+  on:
+    tags: true
+    repo: ofa/django-bouncy

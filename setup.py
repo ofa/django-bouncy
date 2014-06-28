@@ -34,8 +34,8 @@ setup(
         'pem>=0.1.0'
     ],
     tests_require=[
-          'nose==1.3',
-          'django-setuptest==0.1.4',
+          'nose>=1.3',
+          'django-setuptest>=0.1.4',
     ] + extra_tests_require,
     test_suite='setuptest.setuptest.SetupTestSuite',
     keywords = "aws ses sns seacucumber boto",
