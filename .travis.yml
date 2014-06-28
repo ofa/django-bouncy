@@ -46,3 +46,12 @@ matrix:
 # turn off email notifications
 notifications:
   email: false
+deploy:
+  # Allow travis-ci to deploy new tags to PyPI
+  provider: pypi
+  user: ofa
+  password:
+    secure: mynPDpo4PHD8VjYJ03Yui2Xr2ICxP56DEOfE4IOr8RRorqJH7BtrYrX4TkqYLb81IR9Mgnzbk9wslq7ShGfYhXgSFWujDPyCsliPG1v826FXEMe3U7yT5B+Vrt7xA6FkImCuZIROmrGL9KSbobFTsBnTL6/LxMZ6pTYCJiXyf9E=
+  on:
+    tags: true
+    repo: ofa/django-bouncy
