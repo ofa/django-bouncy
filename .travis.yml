@@ -29,6 +29,8 @@ matrix:
       env: MAX_DJANGO_VERSION=1.4.99
     - python: "3.3"
       env: MAX_DJANGO_VERSION=1.4.99
+    - python: "3.4"
+      env: MAX_DJANGO_VERSION=1.4.99
   allow_failures:
     # Python 3 in Django 1.5.* was not production-ready, but still supported
     # so we should still test against it but not fail the build if there are
@@ -36,6 +38,8 @@ matrix:
     - python: "3.2"
       env: MAX_DJANGO_VERSION=1.5.99
     - python: "3.3"
+      env: MAX_DJANGO_VERSION=1.5.99
+    - python: "3.4"
       env: MAX_DJANGO_VERSION=1.5.99
 
     # pypy testing support is experimental
