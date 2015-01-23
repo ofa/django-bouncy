@@ -7,6 +7,7 @@ python:
   - "2.7"
   - "3.2"
   - "3.3"
+  - "3.4"
   - "pypy"
 # command to define we should test against the latest version of all supported
 # versions of django (1.4.*, 1.5.*, 1.6.*)
@@ -14,6 +15,7 @@ env:
   - MAX_DJANGO_VERSION=1.4.99
   - MAX_DJANGO_VERSION=1.5.99
   - MAX_DJANGO_VERSION=1.6.99
+  - MAX_DJANGO_VERSION=1.7.99
 # command to install dependencies (mock & nose are already installed)
 install:
   - pip install django\<$MAX_DJANGO_VERSION
