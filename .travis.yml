@@ -12,25 +12,28 @@ python:
 # command to define we should test against the latest version of all supported
 # versions of django (1.4.*, 1.5.*, 1.6.*)
 env:
-  - MAX_DJANGO_VERSION=1.4.99
-  - MAX_DJANGO_VERSION=1.5.99
-  - MAX_DJANGO_VERSION=1.6.99
-  - MAX_DJANGO_VERSION=1.7.99
+  - DJANGO_INSTALL=django\<1.4.99
+  - DJANGO_INSTALL=django\<1.5.99
+  - DJANGO_INSTALL=django\<1.6.99
+  - DJANGO_INSTALL=django\<1.7.99
+  - DJANGO_INSTALL=git+https://github.com/django/django.git\#egg=django
 # command to install dependencies (mock & nose are already installed)
 install:
-  - pip install django\<$MAX_DJANGO_VERSION
+  - pip install $DJANGO_INSTALL
 # command to run tests
 script: python setup.py test
 matrix:
   fast_finish: true
   exclude:
     # Django doesn't support following combinations
+    - python: "2.6"
+      env: DJANGO_INSTALL=django\<1.7.99
     - python: "3.2"
-      env: MAX_DJANGO_VERSION=1.4.99
+      env: DJANGO_INSTALL=django\<1.4.99
     - python: "3.3"
-      env: MAX_DJANGO_VERSION=1.4.99
+      env: DJANGO_INSTALL=django\<1.4.99
     - python: "3.4"
-      env: MAX_DJANGO_VERSION=1.4.99
+      env: DJANGO_INSTALL=django\<1.4.99
   allow_failures:
     # Python 3 in Django 1.5.* was not production-ready, but still supported
     # so we should still test against it but not fail the build if there are
@@ -49,6 +52,9 @@ matrix:
     # But maybe someday the library will be fixed, so lets test against it
     # anyways, but not fail the entire build if there is an issue
     - python: "3.2"
+
+    # Tests against the master branch may break
+    - env: DJANGO_INSTALL=git+https://github.com/django/django.git\#egg=django
 # turn off email notifications
 notifications:
   email: false
