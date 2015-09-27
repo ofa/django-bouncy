@@ -12,7 +12,8 @@ try:
     from mock import patch
 except ImportError:
     # Python 3
-    from unittest.mock import patch
+    # from unittest.mock import patch
+    from mock import patch
 
 from django_bouncy.tests.helpers import BouncyTestCase, loader
 from django_bouncy import views, signals
