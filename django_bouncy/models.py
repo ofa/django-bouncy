@@ -34,7 +34,7 @@ class Bounce(Feedback):
     )
     status = models.CharField(
         db_index=True, null=True, blank=True, max_length=150)
-    diagnostic_code = models.CharField(null=True, blank=True, max_length=150)
+    diagnostic_code = models.TextField(null=True, blank=True, max_length=5000)
 
     def __unicode__(self):
         """Unicode representation of Bounce"""
