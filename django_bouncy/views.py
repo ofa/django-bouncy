@@ -58,7 +58,12 @@ def endpoint(request):
             return HttpResponseBadRequest('Bad Topic')
 
     # Load the JSON POST Body
-    request_body = request.body.decode()
+    if isinstance(request.body, str):
+        # requests return str in python 2.7
+        request_body = request.body
+    else:
+        # and return bytes in python 3.4
+        request_body = request.body.decode()
     try:
         data = json.loads(request_body)
     except ValueError:
