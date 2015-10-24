@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 
-try:
-    from setuptools import setup
-except ImportError:
-    from ez_setup import use_setuptools
-    use_setuptools()
-    from setuptools import setup
+from setuptools import setup
 
 import os
 # import sys
@@ -15,7 +10,7 @@ ROOT = os.path.abspath(os.path.dirname(__file__))
 
 setup(
     name='django-bouncy',
-    version='0.0.1',
+    version='0.1.0',
     author='Nick Catalano',
     packages=['django_bouncy', 'django_bouncy.migrations', 'django_bouncy.tests'],
     url='https://github.com/ofa/django-bouncy',
@@ -27,17 +22,12 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Django>=1.4',
+        'Django>=1.7',
         'python-dateutil>=2.1',
         'pyopenssl>=0.13.1',
-        'pem>=0.1.0'
+        'pem>=0.1.0',
+        'twisted'
     ],
-    tests_require=[
-        'nose>=1.3',
-        'django-setuptest>=0.1.4',
-        'mock'
-    ],
-    test_suite='setuptest.setuptest.SetupTestSuite',
     keywords="aws ses sns seacucumber boto",
     classifiers=['Development Status :: 4 - Beta', 'Intended Audience :: Developers', 'Topic :: Internet :: WWW/HTTP']
 )
