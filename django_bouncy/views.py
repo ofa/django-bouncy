@@ -31,7 +31,6 @@ VITAL_MESSAGE_FIELDS = [
 ALLOWED_TYPES = [
     'Notification', 'SubscriptionConfirmation', 'UnsubscribeConfirmation'
 ]
-
 logger = logging.getLogger(__name__)
 
 
@@ -59,10 +58,16 @@ def endpoint(request):
             return HttpResponseBadRequest('Bad Topic')
 
     # Load the JSON POST Body
+    if isinstance(request.body, str):
+        # requests return str in python 2.7
+        request_body = request.body
+    else:
+        # and return bytes in python 3.4
+        request_body = request.body.decode()
     try:
-        data = json.loads(request.body)
+        data = json.loads(request_body)
     except ValueError:
-        logger.warning('Notification Not Valid JSON')
+        logger.warning('Notification Not Valid JSON: {}'.format(request_body))
         return HttpResponseBadRequest('Not Valid JSON')
 
     # Ensure that the JSON we're provided contains all the keys we expect

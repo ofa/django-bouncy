@@ -1,9 +1,9 @@
-Django==1.6.1
-South==0.8.2
-nose==1.3
-django-nose==1.2
-coverage==3.6
-mock==1.0.1
+Django==1.8.4
+nose
+django-nose
+coverage
+mock
 pyopenssl>=0.13.1
 pem>=0.1.0
-python-dateutil==2.2
+python-dateutil
+twisted
