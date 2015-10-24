@@ -1,15 +1,13 @@
 language: python
 # Test against 2.7, 3.2 and 3.3
-# We don't support 3.2 because the pem library doesn't support it, but PEM
-# could change in the future so it's still worth testing against
+# We don't support 3.2 because the pem library doesn't support it
 python:
   - "2.7"
-  - "3.2"
   - "3.3"
   - "3.4"
   - "pypy"
 # command to define we should test against the latest version of all supported
-# versions of django (1.4.*, 1.5.*, 1.6.*)
+# versions of django (1.7.x, 1.8.x)
 env:
   - DJANGO_INSTALL=django\<1.7.99
   - DJANGO_INSTALL=django\<1.8.99
@@ -29,14 +27,8 @@ matrix:
     - python: "3.4"
       env: DJANGO_INSTALL=django\<1.4.99
   allow_failures:
-
     # pypy testing support is experimental
     - python: "pypy"
-
-    # Python 3.2 tends to not work due to PEM library issues
-    # But maybe someday the library will be fixed, so lets test against it
-    # anyways, but not fail the entire build if there is an issue
-    - python: "3.2"
 
     # Tests against the master branch may break
     - env: DJANGO_INSTALL=git+https://github.com/django/django.git\#egg=django
