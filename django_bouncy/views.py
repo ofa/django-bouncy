@@ -15,7 +15,7 @@ from django.conf import settings
 from django_bouncy.utils import (
     verify_notification, approve_subscription, clean_time
 )
-from django_bouncy.models import Bounce, Complaint
+from django_bouncy.models import Bounce, Complaint, Delivery
 from django_bouncy import signals
 
 VITAL_NOTIFICATION_FIELDS = [
@@ -145,6 +145,8 @@ def process_message(message, notification):
         return process_complaint(message, notification)
     if message['notificationType'] == 'Bounce':
         return process_bounce(message, notification)
+    if message['notificationType'] == 'Delivery':
+        return process_delivery(message, notification)
     else:
         return HttpResponse('Unknown Notification Type')
 
@@ -228,3 +230,42 @@ def process_complaint(message, notification):
     logger.info('Logged %s Complaint(s)', str(len(complaints)))
 
     return HttpResponse('Complaint Processed')
+
+def process_delivery(message, notification):
+    """Function to process a delivery notification"""
+    mail = message['mail']
+    delivery = message['delivery']
+
+    if 'timestamp' in delivery:
+        delivered_datetime = clean_time(delivery['timestamp'])
+    else:
+        delivered_datetime = None
+
+    deliveries = []
+    for eachrecipient in delivery['recipients']:
+        # Create each delivery 
+        deliveries += [Delivery.objects.create(
+            sns_topic=notification['TopicArn'],
+            sns_messageid=notification['MessageId'],
+            mail_timestamp=clean_time(mail['timestamp']),
+            mail_id=mail['messageId'],
+            mail_from=mail['source'],
+            address=eachrecipient,
+            # delivery
+            delivered_time=delivered_datetime,
+            processing_time=int(delivery['processingTimeMillis']),
+            smtp_response=delivery['smtpResponse']
+        )]
+
+    # Send signals for each delivery.
+    for eachdelivery in deliveries:
+        signals.feedback.send(
+            sender=Delivery,
+            instance=eachdelivery,
+            message=message,
+            notification=notification
+        )
+
+    logger.info('Logged %s Deliveries(s)', str(len(deliveries)))
+
+    return HttpResponse('Delivery Processed')

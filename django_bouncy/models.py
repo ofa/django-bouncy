@@ -12,8 +12,9 @@ class Feedback(models.Model):
     mail_id = models.CharField(max_length=100)
     mail_from = models.EmailField()
     address = models.EmailField()
-    feedback_id = models.CharField(max_length=100)
-    feedback_timestamp = models.DateTimeField(verbose_name="Feedback Time")
+    # no feedback for delivery messages
+    feedback_id = models.CharField(max_length=100, null=True, blank=True)
+    feedback_timestamp = models.DateTimeField(verbose_name="Feedback Time",null=True, blank=True)
 
     class Meta(object):
         """Meta info for Feedback Abstract Model"""
@@ -54,4 +55,16 @@ class Complaint(Feedback):
     def __unicode__(self):
         """Unicode representation of Complaint"""
         return "%s Complaint (email sender: from %s)" % (
+            self.address, self.mail_from)
+
+
+class Delivery(Feedback):
+    """A delivery report for an individual email address"""
+    delivered_time = models.DateTimeField(blank=True, null=True)
+    processing_time = models.PositiveSmallIntegerField(default=0)
+    smtp_response = models.TextField(blank=True,null=True)
+
+    def __unicode__(self):
+        """Unicode representation of Delivery"""
+        return "%s Delivery (email sender: from %s)" % (
             self.address, self.mail_from)
