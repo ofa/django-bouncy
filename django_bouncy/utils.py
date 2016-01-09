@@ -24,7 +24,7 @@ import six
 
 from OpenSSL import crypto
 from django.conf import settings
-from django.core.cache import get_cache
+from django.core.cache import caches
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils import timezone
 from django.utils.encoding import smart_str
@@ -71,7 +71,7 @@ def grab_keyfile(cert_url):
     for all SNS requests. So we need to keep a copy of the cert in our
     cache
     """
-    key_cache = get_cache(getattr(settings, 'BOUNCY_KEY_CACHE', 'default'))
+    key_cache = caches[getattr(settings, 'BOUNCY_KEY_CACHE', 'default')]
 
     pemfile = key_cache.get(cert_url)
     if not pemfile:
