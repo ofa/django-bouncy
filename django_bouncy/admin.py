@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from django_bouncy.models import Bounce, Complaint
+from django_bouncy.models import Bounce, Complaint, Delivery
 
 
 class BounceAdmin(admin.ModelAdmin):
@@ -21,5 +21,12 @@ class ComplaintAdmin(admin.ModelAdmin):
     list_filter = ('feedback_type', 'feedback_timestamp')
 
 
+class DeliveryAdmin(admin.ModelAdmin):
+    """Admin model for 'Delivery' objects"""
+    list_display = ('address', 'mail_from')
+    list_filter = ('feedback_timestamp',)
+
+
 admin.site.register(Bounce, BounceAdmin)
 admin.site.register(Complaint, ComplaintAdmin)
+admin.site.register(Delivery, DeliveryAdmin)

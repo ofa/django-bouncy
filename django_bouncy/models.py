@@ -68,3 +68,6 @@ class Delivery(Feedback):
         """Unicode representation of Delivery"""
         return "%s Delivery (email sender: from %s)" % (
             self.address, self.mail_from)
+
+    class Meta:
+        verbose_name_plural = 'deliveries'
