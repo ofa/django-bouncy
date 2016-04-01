@@ -1,16 +1,17 @@
 language: python
-# Test against 2.7, 3.2 and 3.3
+# Test against 2.7, 3.3 and 3.4
 # We don't support 3.2 because the pem library doesn't support it
 python:
   - "2.7"
   - "3.3"
   - "3.4"
+  - "3.5"
   - "pypy"
 # command to define we should test against the latest version of all supported
-# versions of django (1.7.x, 1.8.x)
+# versions of django (1.8.x, 1.9.x)
 env:
-  - DJANGO_INSTALL=django\<1.7.99
   - DJANGO_INSTALL=django\<1.8.99
+  - DJANGO_INSTALL=django\<1.9.99
   - DJANGO_INSTALL=git+https://github.com/django/django.git\#egg=django
 # command to install dependencies (mock & nose are already installed)
 install:
@@ -21,11 +22,6 @@ install:
 script: python manage.py test --settings 'test_settings'
 matrix:
   fast_finish: true
-  exclude:
-    - python: "3.3"
-      env: DJANGO_INSTALL=django\<1.4.99
-    - python: "3.4"
-      env: DJANGO_INSTALL=django\<1.4.99
   allow_failures:
     # pypy testing support is experimental
     - python: "pypy"
