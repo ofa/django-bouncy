@@ -1,0 +1,16 @@
+{
+  "Type" : "Notification",
+  "MessageId" : "fbdf2eda-c5ed-5096-a8d7-61a043f7db6e",
+  "TopicArn" : "arn:aws:sns:us-east-1:674400795651:Bouncy_Test",
+  "Message" : "{\n   \"notificationType\":\"Delivery\",\n   \"mail\":{\n      \"timestamp\":\"2014-05-28T22:40:59.638Z\",\n      \"messageId\":\"0000014644fe5ef6-9a483358-9170-4cb4-a269-f5dcdf415321-000000\",\n      \"source\":\"sender@example.com\",\n      \"sourceArn\": \"arn:aws:ses:us-west-2:888888888888:identity/example.com\",\n      \"sendingAccountId\":\"123456789012\",\n      \"destination\":[\n         \"success@simulator.amazonses.com\"\n      ]\n   },\n   \"delivery\":{\n      \"timestamp\":\"2014-05-28T22:41:01.184Z\",\n      \"recipients\":[\"success@simulator.amazonses.com\"],\n      \"processingTimeMillis\":\"546\",\n      \"reportingMTA\":\"a8-70.smtp-out.amazonses.com\",\n      \"smtpResponse\":\"250 ok:  Message 64111812 accepted\"\n   } \n}",
+  "Timestamp" : "2016-04-03T02:45:46.794Z",
+  "SignatureVersion" : "1",
+  "Signature" : "dlB+74ch3tM2IHxL54pwFzfS+M3c2GkHeanEfV7IJG4+JEeayUi3ZbXGkpY6LB0vpm3pmAjx078pdQpHNoHzU1/1OfL2ghRuv0pABYnrKvsvuwTFFPEPbkXVJPHvFc7aW5lhRxkGq1R/mT529RlmMbhtaheRt5laRAROBDsQVhzEDRNqrDrteo9oh9ECgPZ7nuWNPX82HQb1OTgzDyFcdVfyJaoankAlgKaEvE+8O8uvrKr9+Q63q+OhW+djCVyFW8wEaOjDDa+r1K4+D42rYspK32mZ/98RbEHJ8yvTxskiQKwjPGAiuI2rVPgllFixVpkrN0RqZTZTFuelaB0hww==",
+  "SigningCertURL" : "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-bb750dd426d95ee9390147a5624348ee.pem",
+  "UnsubscribeURL" : "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:674400795651:Bouncy_Test:d8308374-bc16-4697-ac4b-d68e1a791af7",
+  "MessageAttributes" : {
+    "AWS.SNS.MOBILE.MPNS.Type" : {"Type":"String","Value":"token"},
+    "AWS.SNS.MOBILE.MPNS.NotificationClass" : {"Type":"String","Value":"realtime"},
+    "AWS.SNS.MOBILE.WNS.Type" : {"Type":"String","Value":"wns/badge"}
+  }
+}

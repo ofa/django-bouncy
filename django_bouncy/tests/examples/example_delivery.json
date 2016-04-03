@@ -1,0 +1,20 @@
+{
+   "notificationType":"Delivery",
+   "mail":{
+      "timestamp":"2014-05-28T22:40:59.638Z",
+      "messageId":"0000014644fe5ef6-9a483358-9170-4cb4-a269-f5dcdf415321-000000",
+      "source":"sender@example.com",
+      "sourceArn": "arn:aws:ses:us-west-2:888888888888:identity/example.com",
+      "sendingAccountId":"123456789012",
+      "destination":[
+         "success@simulator.amazonses.com"
+      ]
+   },
+   "delivery":{
+      "timestamp":"2014-05-28T22:41:01.184Z",
+      "recipients":["success@simulator.amazonses.com"],
+      "processingTimeMillis":"546",
+      "reportingMTA":"a8-70.smtp-out.amazonses.com",
+      "smtpResponse":"250 ok:  Message 64111812 accepted"
+   } 
+}

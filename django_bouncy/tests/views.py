@@ -18,7 +18,7 @@ except ImportError:
 from django_bouncy.tests.helpers import BouncyTestCase, loader
 from django_bouncy import views, signals
 from django_bouncy.utils import clean_time
-from django_bouncy.models import Bounce, Complaint
+from django_bouncy.models import Bounce, Complaint, Delivery
 
 
 class BouncyEndpointViewTest(BouncyTestCase):
@@ -321,4 +321,67 @@ class ProcessComplaintTest(BouncyTestCase):
             feedback_timestamp=clean_time('2012-05-25T14:59:38.623-07:00'),
             useragent='Comcast Feedback Loop (V0.01)',
             arrival_date=clean_time('2009-12-03T04:24:21.000-05:00')
+        ).exists())
+
+
+class ProcessDeliveryTest(BouncyTestCase):
+    """Test the process_delivery function"""
+    def setUp(self):
+        """Setup the process delivery test"""
+        self.delivery = loader('delivery')
+        self.delivery_notification = loader('delivery_notification')
+
+    def test_delivery_created(self):
+        """Test that the Delivery object was created"""
+        original_count = Delivery.objects.count()
+        result = views.process_delivery(
+            self.delivery, self.delivery_notification)
+        new_count = Delivery.objects.count()
+
+        self.assertEqual(new_count, original_count + 1)
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.content.decode('ascii'), 'Delivery Processed')
+
+    def test_signals_sent(self):
+        """Test that the django delivery signal was sent"""
+        # pylint: disable=attribute-defined-outside-init, unused-variable
+        self.signal_count = 0
+
+        @receiver(signals.feedback)
+        def _signal_receiver(sender, **kwargs):
+            """Test signal receiver"""
+            # pylint: disable=unused-argument
+            self.signal_count += 1
+            self.signal_notification = kwargs['notification']
+            self.signal_message = kwargs['message']
+
+        result = views.process_delivery(
+            self.delivery, self.delivery_notification)
+
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.content.decode('ascii'), 'Delivery Processed')
+        self.assertEqual(self.signal_count, 1)
+        self.assertEqual(self.signal_notification, self.delivery_notification)
+
+    def test_correct_delivery_created(self):
+        """Test that the correct delivery was created"""
+        Delivery.objects.all().delete()
+
+        result = views.process_delivery(
+            self.delivery, self.delivery_notification)
+
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.content.decode('ascii'), 'Delivery Processed')
+        self.assertTrue(Delivery.objects.filter(
+            sns_topic='arn:aws:sns:us-east-1:674400795651:Bouncy_Test',
+            sns_messageid='fbdf2eda-c5ed-5096-a8d7-61a043f7db6e',
+            mail_timestamp=clean_time('2014-05-28T22:40:59.638Z'),
+            mail_id='0000014644fe5ef6-9a483358-9170-4cb4-a269-f5dcdf415321-000'
+                    '000',
+            mail_from='sender@example.com',
+            address='success@simulator.amazonses.com',
+            # delivery
+            delivered_time=clean_time('2014-05-28T22:41:01.184Z'),
+            processing_time=546,
+            smtp_response='250 ok:  Message 64111812 accepted'
         ).exists())
