@@ -29,11 +29,11 @@ Then add ``django_bouncy.urls`` to your ``urlpatterns`` found in your app's ``ur
 
 For example, if you'd like to create an endpoint at ``http://yourapp.com/bouncy/`` your ``urls.py`` file would look like this:
 
-::
+.. code-block:: python
 
     from django.conf.urls import patterns, include, url
     urlpatterns = patterns('',
-        url(r'^bouncy/', include('django_bouncy.urls', app_name='django_bouncy')),
+        url(r'^bouncy/', include('django_bouncy.urls')),
     )
 
 The next steps involve interacting with AWS through the `AWS Management Console`_.
@@ -76,7 +76,7 @@ Django Bouncy exposes valid Bounces and Complaints 2 ways: via Django Bouncy's `
 
 To pull all the bounces from Django Bouncy, you'd simply import the model and make that request
 
-::
+.. code-block:: python
 
     from django_bouncy.models import Bounce
 
@@ -90,7 +90,7 @@ The schema for the ``Bounce`` and ``Complaint`` models are best found by viewing
 
 If you'd rather subscribe to the notification, perhaps to create new records in your own ``Unsubscribe`` model, simply attach to the ``feedback`` signal:
 
-::
+.. code-block:: python
 
     from django.dispatch import receiver
     from django_bouncy.models import Bounce
