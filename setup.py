@@ -10,7 +10,7 @@ ROOT = os.path.abspath(os.path.dirname(__file__))
 
 setup(
     name='django-bouncy',
-    version='0.1.0',
+    version='0.2.0',
     author='Nick Catalano',
     packages=[
         'django_bouncy', 'django_bouncy.migrations', 'django_bouncy.tests'],
