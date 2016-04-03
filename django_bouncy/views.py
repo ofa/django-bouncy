@@ -231,6 +231,7 @@ def process_complaint(message, notification):
 
     return HttpResponse('Complaint Processed')
 
+
 def process_delivery(message, notification):
     """Function to process a delivery notification"""
     mail = message['mail']
