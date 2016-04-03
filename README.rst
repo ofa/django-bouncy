@@ -2,7 +2,7 @@
 Django Bouncy
 *************
 
-Django Bouncy is a Django package used to process bounce and abuse reports delivered via Amazon Web Services' `Simple Notification Service`_ regarding emails sent by Amazon's `Simple Email Service`_
+Django Bouncy is a Django package used to process delivery, bounce, and abuse reports delivered via Amazon Web Services' `Simple Notification Service`_ regarding emails sent by Amazon's `Simple Email Service`_
 
 .. _Simple Notification Service: http://aws.amazon.com/sns/
 .. _Simple Email Service: http://aws.amazon.com/ses/
@@ -10,9 +10,11 @@ Django Bouncy is a Django package used to process bounce and abuse reports deliv
 
 Introduction
 ------------
-When an email is sent via Simple Email Service (SES) Amazon will attempt to deliver your message to the recipient's SMTP server. In some instances, such as when an email address is invalid (a 'Hard Bounce'), a user is on vacation (a 'Soft bounce'), or a user marks an email as abusive or spam Amazon will pass these responses back to your app via one of two ways: either by forwarding the reply to an email address of your choice (the default) or send a JSON encoded and signed message inside a notification delivered via their Simple Notification Service (SNS).
+Amazon's Simple Email Service (SES) allows Amazon clients the ability to use Amazon's outgoing SMTP servers to deliver email to 3rd parties. As part of the final delivery step, Amazon sometimes gets information that may be of use to their clients. Amazon offers the ability to pass information received from 3rd party SMTP servers to clients via a JSON encoded and signed Simple Notification Service (SNS) message.
 
-The purpose of Django Bouncy is to act as an endpoint for SES which will confirm that the notification came from Amazon and then properly record the bounce or complaint for use by other apps in a project.
+There are currently 3 messages that Amazon offers to pass back. Bounces (where an email address is unavailable, either perminantly with a 'hard' bounce or tempoarially with a 'soft' bounce), complaints (where a user marks an email as spam), and successful deliveries (where the message was accepted by the recipient's mailserver)
+
+The purpose of Django Bouncy is to act as an endpoint for SES which will confirm that the notification came from Amazon and then properly record the delivery, bounce, or complaint for use by other apps in a project.
 
 
 Installation & Configuration
@@ -72,7 +74,7 @@ If you'd like to test your new Django Bouncy implementation. Amazon provides a `
 
 Processing Bounces and Complaints
 ---------------------------------
-Django Bouncy exposes valid Bounces and Complaints 2 ways: via Django Bouncy's ``Bounce`` and ``Complaint`` models, as well as via a signal that other parts of your Django application can attach to.
+Django Bouncy exposes valid Deliveries, Bounces and Complaints 2 ways: via Django Bouncy's ``Delivery``, ``Bounce``, and ``Complaint`` models, as well as via a signal that other parts of your Django application can attach to.
 
 To pull all the bounces from Django Bouncy, you'd simply import the model and make that request
 
@@ -86,7 +88,7 @@ To pull all the bounces from Django Bouncy, you'd simply import the model and ma
     all_hard_bounces = Bounce.objects.filter(hard=True)
 
 
-The schema for the ``Bounce`` and ``Complaint`` models are best found by viewing the ``django_bouncy/models.py`` file included with Django Bouncy.
+The schema for the ``Delivery``, ``Bounce`` and ``Complaint`` models are best found by viewing the ``django_bouncy/models.py`` file included with Django Bouncy.
 
 If you'd rather subscribe to the notification, perhaps to create new records in your own ``Unsubscribe`` model, simply attach to the ``feedback`` signal:
 
@@ -126,7 +128,8 @@ You can adjust the cache you wish Django Bouncy to store the certificate in by c
 
 Credits
 -------
-Django Bouncy was built in-house by `Organizing for Action`_ and the source code is available on the `Django Bouncy GitHub Repository`_.
+Django Bouncy was initially written in-house at `Organizing for Action`_ led by `Nick Catalano`_, and the source code is available on the `Django Bouncy GitHub Repository`_.
 
 .. _Organizing for Action: http://www.barackobama.com/
+.. _Nick Catalano: https://github.com/nickcatal
 .. _Django Bouncy GitHub Repository: https://github.com/ofa/django-bouncy
