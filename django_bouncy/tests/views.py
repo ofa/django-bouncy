@@ -385,3 +385,27 @@ class ProcessDeliveryTest(BouncyTestCase):
             processing_time=546,
             smtp_response='250 ok:  Message 64111812 accepted'
         ).exists())
+
+    def test_correct_delivery_created_long_response_time(self):
+        """Test that the correct delivery was created with a long processing_time"""
+        Delivery.objects.all().delete()
+        self.delivery['delivery']['processingTimeMillis'] = 123999123
+        result = views.process_delivery(
+            self.delivery, self.delivery_notification)
+
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.content.decode('ascii'), 'Delivery Processed')
+        self.assertTrue(Delivery.objects.filter(
+            sns_topic='arn:aws:sns:us-east-1:674400795651:Bouncy_Test',
+            sns_messageid='fbdf2eda-c5ed-5096-a8d7-61a043f7db6e',
+            mail_timestamp=clean_time('2014-05-28T22:40:59.638Z'),
+            mail_id='0000014644fe5ef6-9a483358-9170-4cb4-a269-f5dcdf415321-000'
+                    '000',
+            mail_from='sender@example.com',
+            address='success@simulator.amazonses.com',
+            # delivery
+            delivered_time=clean_time('2014-05-28T22:41:01.184Z'),
+            processing_time=123999123,
+            smtp_response='250 ok:  Message 64111812 accepted'
+        ).exists())
+
