@@ -62,7 +62,7 @@ class Complaint(Feedback):
 class Delivery(Feedback):
     """A delivery report for an individual email address"""
     delivered_time = models.DateTimeField(blank=True, null=True)
-    processing_time = models.PositiveIntegerField(default=0)
+    processing_time = models.IntegerField(default=0)
     smtp_response = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
