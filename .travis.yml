@@ -8,10 +8,11 @@ python:
   - "3.5"
   - "pypy"
 # command to define we should test against the latest version of all supported
-# versions of django (1.8.x, 1.9.x)
+# versions of django (1.8.x, 1.9.x, 1.10.x)
 env:
   - DJANGO_INSTALL=django\<1.8.99
   - DJANGO_INSTALL=django\<1.9.99
+  - DJANGO_INSTALL=django\<1.10.99
   - DJANGO_INSTALL=git+https://github.com/django/django.git\#egg=django
 # command to install dependencies (mock & nose are already installed)
 install:
@@ -33,7 +34,11 @@ matrix:
     - python: "3.3"
       env: DJANGO_INSTALL=django\<1.9.99
 
-    # Django 1.9 onward doesn't support Python 3.3
+    # Django 1.10 onward doesn't support Python 3.3
+    - python: "3.3"
+      env: DJANGO_INSTALL=django\<1.10.99
+
+    # Django latest onward doesn't support Python 3.3
     - python: "3.3"
       env: DJANGO_INSTALL=git+https://github.com/django/django.git\#egg=django
 # turn off email notifications
