@@ -47,6 +47,10 @@ matrix:
     - python: "3.4"
       env: DJANGO_INSTALL=git+https://github.com/django/django.git\#egg=django
 
+    # Django latest onward doesn't support Python 2
+    - python: "2.7"
+      env: DJANGO_INSTALL=git+https://github.com/django/django.git\#egg=django
+
 # turn off email notifications
 notifications:
   email: false
