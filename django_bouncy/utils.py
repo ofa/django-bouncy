@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 """Utility functions for the django_bouncy app"""
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 try:
     import urllib2 as urllib
 except ImportError:
