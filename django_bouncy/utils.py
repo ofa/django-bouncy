@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Utility functions for the django_bouncy app"""
 try:
     import urllib2 as urllib
@@ -32,7 +33,7 @@ import dateutil.parser
 
 from django_bouncy import signals
 
-NOTIFICATION_HASH_FORMAT = '''Message
+NOTIFICATION_HASH_FORMAT = u'''Message
 {Message}
 MessageId
 {MessageId}
@@ -44,7 +45,7 @@ Type
 {Type}
 '''
 
-SUBSCRIPTION_HASH_FORMAT = '''Message
+SUBSCRIPTION_HASH_FORMAT = u'''Message
 {Message}
 MessageId
 {MessageId}
